@@ -14,14 +14,14 @@
 ![Scaler DSML](https://img.shields.io/badge/Scaler_DSML-Business_Case_Study-FF4B4B?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Completed-success?style=for-the-badge)
 
-**Diagnosing Micro-Mobility Demand Drivers Across 10,886 Hourly Records Using Parametric & Non-Parametric Hypothesis Testing**  
+**Diagnosing Electric Cycle Demand Across 10,886 Hourly Records Using Two-Sample T-Tests, One-Way & Two-Way ANOVA, and Chi-Square Testing**  
 *(Business Case Study completed as part of Scaler Academy's Data Science & Machine Learning Program)*
 
 [View Case Study Report (PDF)](reports/Shivaling_Scaler_Yulu_Hypothesis_Case_Study_Report.pdf) • [View Jupyter Notebook](notebooks/Yulu_Hypothesis_Testing_Case_Study.ipynb) • [View Dataset Documentation](data/README.md) • [Live Portfolio](https://iamshivalingbattarki09.vercel.app/) • [LinkedIn Profile](https://www.linkedin.com/in/shivaling-93000/)
 
 <br/>
 
-<!-- Tech Stack Icon Ribbon -->
+<!-- Tech Stack Icon Ribbon with Official Logos -->
 <table>
   <tr>
     <td align="center" width="95"><img src="assets/icons/python-icon.svg" width="38" height="38"/><br/><sub><b>Python</b></sub></td>
@@ -42,12 +42,13 @@
 
 ## 📌 15-Second Executive Summary
 
-| Business Question | Statistical Test Applied | Test Statistic & p-value | Decision ($\alpha=0.05$) | Core Business Finding & Takeaway |
+| Business Question | Statistical Test Applied | Test Statistic & p-value | Decision ($\alpha=0.05$) | Core Quantitative Finding & Takeaway |
 | :--- | :--- | :--- | :--- | :--- |
-| **Q1: Does working day affect hourly cycle rentals?** | **2-Sample Welch's T-Test** & Mann-Whitney U | $t = 1.21$, $p = 0.226$<br>($U = 1.48 \times 10^7, p = 0.963$) | **Fail to Reject $H_0$** | **Aggregate parity masks extreme rider inversion.** Total demand is identical (~193 vs ~188 bikes/hr), but registered commuters peak at 8 AM/5 PM on weekdays, while casual riders surge by **+136% on weekend afternoons**. |
-| **Q2: Does cycle demand vary across seasons?** | **One-Way ANOVA** & Post-Hoc Tukey HSD | $F = 236.94$, $p < 10^{-100}$<br>(Kruskal-Wallis $p < 10^{-100}$) | **Reject $H_0$** | **Severe seasonal collapse in Spring.** Spring demand drops by **>50%** ($116.3$ bikes/hr) compared to the Fall peak ($234.4$ bikes/hr). Requires promotional passes and student pricing. |
-| **Q3: Does cycle demand vary across weather categories?** | **One-Way ANOVA** & Kruskal-Wallis | $F = 65.53$, $p < 10^{-42}$<br>(Kruskal-Wallis $p < 10^{-43}$) | **Reject $H_0$** | **Adverse weather cuts demand by 42%.** Clear weather averages $205.2$ bikes/hr; light rain/snow drops to $118.8$. Diagnosed single outlier in Weather 4 ($n=1$) where variance cannot be estimated. |
-| **Q4: Is weather condition dependent on season?** | **Chi-Square Test of Independence ($\chi^2$)** | $\chi^2 = 283.4$, $df = 9$<br>$p < 10^{-50}$ | **Reject $H_0$** | **Weather patterns depend heavily on seasons.** Verified Cochran's condition violation ($E < 5$ in Weather 4) and proved robustness through category combination. |
+| **Q1: Does working day affect hourly cycle demand?** | **2-Sample Independent T-Test** (Levene's Variance Check) | $t = 1.2098$, $p = 0.2264$<br>(Levene $W = 0.005, p = 0.9438$) | **Fail to Reject $H_0$** | **Aggregate parity masks extreme rider inversion.** Mean hourly rentals are nearly identical ($193.0$ on working days vs $188.5$ on non-working days). However, registered commuters drive 81% of rides peaking at 8 AM/5 PM on weekdays, while casual riders jump to $59.3$/hour on weekend afternoons. |
+| **Q2: Does cycle demand vary across the 4 seasons?** | **One-Way ANOVA** & Kruskal-Wallis Check | $F = 236.95$, $p = 6.16 \times 10^{-149}$<br>(Kruskal-Wallis $H = 699.66$) | **Reject $H_0$** | **The revenue dip is a Spring collapse, not a weekday slump.** Spring demand drops by **>50%** ($116.3$ rides/hr) compared to the Fall peak ($234.4$ rides/hr). Summer ($215.3$) and Winter ($199.0$) sit in between. |
+| **Q3: Does cycle demand vary across weather categories?** | **One-Way ANOVA** & Kruskal-Wallis Check | $F = 65.53$, $p = 5.48 \times 10^{-42}$<br>(Kruskal-Wallis $p < 0.001$) | **Reject $H_0$** | **Rain cuts demand by ~42%.** Clear weather averages $205.2$ rides/hr; light rain/snow drops to $118.8$. Diagnosed single outlier event in Weather 4 ($n=1$) where variance cannot be estimated. |
+| **Q4: Do Season and Weather interact in driving demand?** | **Two-Way ANOVA** (`pingouin.anova`, SS Type-2) | Season: $p < 10^{-100}$ ($\eta_p^2 = 6.2\%$)<br>Weather: $p < 10^{-35}$ ($\eta_p^2 = 1.8\%$)<br>Interaction: $p = 4.14 \times 10^{-8}$ ($\eta_p^2 = 0.2\%$) | **Both Significant; Negligible Interaction** | **Season sets baseline demand; weather creates daily swings.** Because the interaction explains only $0.2\%$ of variance, bad weather reduces demand by roughly the same ~40% margin regardless of whether it rains in Summer, Fall, or Winter. |
+| **Q5: Is weather condition dependent on season?** | **Chi-Square Test of Independence ($\chi^2$)** | $\chi^2 = 283.40$, $df = 9$<br>$p = 1.55 \times 10^{-55}$ | **Reject $H_0$** | **Weather conditions are statistically dependent on season.** Winter concentrates the highest misty/cloudy days (29.5%), while Summer and Fall have the highest clear-riding days. |
 
 ---
 
@@ -56,12 +57,14 @@
 - [🎯 Business Problem & Context](#-business-problem--context)
 - [🧠 Analytical Way of Thinking & Skill Growth](#-analytical-way-of-thinking--skill-growth)
 - [🗺️ Statistical Testing Decision Framework](#️-statistical-testing-decision-framework)
-- [📊 Exploratory Data Analysis & Distribution Profiling](#-exploratory-data-analysis--distribution-profiling)
+- [📊 Exploratory Data Analysis: Key Visual Highlights](#-exploratory-data-analysis-key-visual-highlights)
+  - [1. Univariate Distributions & Outliers (Continuous Variables)](#1-univariate-distributions--outliers-continuous-variables)
+  - [2. Bivariate Analysis: Target vs. Primary Categorical Features](#2-bivariate-analysis-target-vs-primary-categorical-features)
+  - [3. Correlation Matrix & Multicollinearity](#3-correlation-matrix--multicollinearity)
 - [🔬 Statistical Hypothesis Testing Deep-Dive](#-statistical-hypothesis-testing-deep-dive)
-  - [1. Working Day Impact (2-Sample T-Test)](#1-working-day-impact-2-sample-t-test)
-  - [2. Seasonal Demand Variation (One-Way ANOVA + Tukey HSD)](#2-seasonal-demand-variation-one-way-anova--tukey-hsd)
-  - [3. Weather Sensitivity & The n=1 Edge Case (ANOVA)](#3-weather-sensitivity--the-n1-edge-case-anova)
-  - [4. Weather vs. Season Dependency (Chi-Square Test)](#4-weather-vs-season-dependency-chi-square-test)
+  - [Test 1: Working Day vs. Count (2-Sample T-Test)](#test-1-working-day-vs-count-2-sample-t-test)
+  - [Test 2: Season & Weather vs. Count (One-Way & Two-Way ANOVA)](#test-2-season--weather-vs-count-one-way--two-way-anova)
+  - [Test 3: Weather vs. Season (Chi-Square Test of Independence)](#test-3-weather-vs-season-chi-square-test-of-independence)
 - [🎯 Actionable Strategic Recommendations for Yulu](#-actionable-strategic-recommendations-for-yulu)
 - [📁 Repository Architecture](#-repository-architecture)
 - [🚀 How to Run & Reproduce](#-how-to-run--reproduce)
@@ -71,12 +74,12 @@
 
 ## 🎯 Business Problem & Context
 
-Yulu is India’s leading micro-mobility service provider, offering electric cycles and shared solo mobility across major transit zones, metro stations, and office complexes.
+Yulu is India’s leading micro-mobility service provider, offering shared solo electric cycle rentals across transit corridors, metro stations, and corporate tech parks.
 
 Recently, Yulu experienced **conspicuous dips in revenue and utilization**. Company leadership contracted an analytical consulting review to identify:
 1. Which environmental and calendar variables significantly drive electric cycle demand?
 2. How strongly these variables govern hourly fleet utilization?
-3. How Yulu can adjust daily fleet allocation to eliminate idle inventory and avoid unmet demand?
+3. How Yulu can adjust daily fleet allocation to eliminate idle inventory and capture unmet demand?
 
 ### The Data Foundation
 - **Records:** 10,886 hourly observations across two full years.
@@ -87,30 +90,23 @@ Recently, Yulu experienced **conspicuous dips in revenue and utilization**. Comp
 
 ## 🧠 Analytical Way of Thinking & Skill Growth
 
-This project represents a major transition in my analytical journey: moving beyond surface-level descriptive summaries into rigorous inferential statistics and decision engineering.
+This project reflects a disciplined transition in my analytical career: moving from descriptive summaries to hypothesis-driven inferential rigor and operational decision engineering.
 
-```
-Surface-Level Descriptive Thinking             Hypothesis-Driven Inferential Thinking
-"Average rentals on weekdays = 193.             "Run Welch's T-Test: p = 0.226. No mean difference.
- Average rentals on weekends = 188.      VS      However, decompose count: registered riders dominate
- Difference is ~5 bikes. Keep fleet             weekdays (twin peaks at 8 AM/5 PM), while casual riders
- static throughout the week."                    surge +136% on weekends. Dynamic fleet rebalancing required!"
-```
-
-### 1. The Simpson's Paradox Mindset: Aggregate Metrics Lie
-Evaluating total demand shows identical numbers for working days ($193.0$) and non-working days ($188.5$). A naive analyst would conclude that operations can stay identical every day.
-By splitting riders into **Registered Commuters** and **Casual Users**, the data reveals opposite behavioral patterns:
-- Weekdays are powered by 9-to-5 commuters with sharp morning (8:00 AM) and evening (5:00 PM) peaks.
-- Weekends are driven by casual riders who rent bikes steadily throughout the afternoon.
+### 1. Simpson's Paradox Mindset: Aggregate Metrics Lie
+Evaluating total demand shows nearly identical averages for working days ($193.0$) and non-working days ($188.5$). A naive analyst would conclude that demand is uniform throughout the week.  
+Decomposing `count` into **Registered Commuters** and **Casual Users** reveals opposite dynamics:
+- **Casual riders**: Drop from **$59.3$/hour** on weekends down to **$25.1$/hour** on working days.
+- **Registered commuters**: Surge from **$129.2$/hour** on weekends up to **$167.9$/hour** on working days, driving **81.2% of total volume**.
+- Commuter volume clusters tightly at **08:00–09:00 AM** and **17:00–18:00 PM**, while casual riders ride in a broad midday leisure window (**12:00–16:00 PM**).
 
 ### 2. Assumption-First Diagnostics: Never Test Blindly
 Textbook formulas assume perfect normal distributions and equal variances. Real-world mobility data violates both:
-- **Normality Check:** With $N = 10,886$, the **Central Limit Theorem (CLT)** ensures sample means are normally distributed, but raw counts are heavily right-skewed ($\text{skew} = +1.24$).
-- **Variance Homogeneity:** Running **Levene’s test** revealed unequal variances across season groups ($p < 10^{-100}$). This required pairing parametric ANOVA with non-parametric **Kruskal-Wallis** rank tests to guarantee robust conclusions.
+- **Normality Check:** With $N = 10,886$, the **Central Limit Theorem (CLT)** ensures sample means are normally distributed, but raw counts are right-skewed ($\text{skew} = +1.24$).
+- **Variance Homogeneity:** Running **Levene’s test** revealed unequal variances across season and weather groups ($p < 0.001$). This required pairing parametric ANOVA with non-parametric **Kruskal-Wallis** rank tests to guarantee robust conclusions.
 
 ### 3. Diagnosing Edge Cases ($n = 1$ in Weather 4)
-In the dataset, Weather Category 4 (*Heavy Rain, Ice Pellets, Thunderstorm*) has exactly **1 observation** (`count = 164`).
-A sample size of $n = 1$ has zero degrees of freedom; sample variance cannot be computed. Running naive ANOVA or Chi-Square tests without checking cell counts creates distorted conclusions. I documented this limitation, validated assumptions via Cochran's rule ($E \ge 5$), and executed sensitivity re-tests with merged severe weather tiers.
+In the dataset, Weather Category 4 (*Heavy Rain, Ice Pellets, Thunderstorm*) has exactly **1 observation** (`count = 164`).  
+A sample size of $n = 1$ has zero degrees of freedom; sample variance cannot be computed. During Two-Way ANOVA, I isolated this single extreme event (`yulu[yulu['weather'] != 4]`) to ensure mathematically valid sum-of-squares partitioning.
 
 ---
 
@@ -118,153 +114,175 @@ A sample size of $n = 1$ has zero degrees of freedom; sample variance cannot be 
 
 ```mermaid
 flowchart TD
-    Start["Research Goal: Predict Yulu Hourly Cycle Demand"] --> Q1{"Nature of Target & Grouping?"}
+    Start["Research Goal: Identify Factors Driving Yulu Cycle Demand"] --> Q1{"Nature of Target & Independent Variable?"}
     
     Q1 -->|"Continuous (Count) vs 2 Groups (Workingday 0 vs 1)"| TTestPath["2-Sample Comparison"]
-    Q1 -->|"Continuous (Count) vs >2 Groups (Season / Weather)"| AnovaPath["Multi-Group Comparison"]
+    Q1 -->|"Continuous (Count) vs >2 Groups (Season & Weather)"| AnovaPath["Multi-Factor Comparison"]
     Q1 -->|"Categorical vs Categorical (Weather vs Season)"| ChiPath["Contingency Analysis"]
 
-    TTestPath --> T1["Check Normality (Q-Q Plot / CLT)"]
-    T1 --> T2["Check Equal Variance (Levene Test)"]
-    T2 --> T3["2-Sample Welch T-Test (t = 1.21, p = 0.226)<br/>Non-parametric check: Mann-Whitney U"]
+    TTestPath --> T1["Check Normality (Shapiro-Wilk + CLT Check)"]
+    T1 --> T2["Check Equal Variance (Levene Test: p = 0.9438)"]
+    T2 --> T3["2-Sample Independent T-Test (t = 1.2098, p = 0.2264)<br/>Decision: Fail to Reject H0"]
 
-    AnovaPath --> A1["Check Equal Variance (Levene Test: p < 1e-100)"]
-    A1 --> A2["One-Way ANOVA (F-Test)<br/>Seasons: F = 236.94, p < 1e-100<br/>Weather: F = 65.53, p < 1e-42"]
-    A2 --> A3["Non-parametric Check: Kruskal-Wallis Test"]
-    A3 --> A4["Post-Hoc Tukey HSD: Pinpoint pairwise differences"]
+    AnovaPath --> A1["Check Equal Variance (Levene Test across Seasons & Weathers)"]
+    A1 --> A2["One-Way ANOVA (F-Test)<br/>Season: F = 236.95, p < 1e-100<br/>Weather: F = 65.53, p < 1e-42"]
+    A2 --> A3["Non-Parametric Robustness: Kruskal-Wallis Test"]
+    A3 --> A4["Two-Way ANOVA (pingouin.anova, SS Type-2)<br/>Season (6.2%) + Weather (1.8%) + Interaction (0.2%)"]
 
-    ChiPath --> C1["Build 4x4 Contingency Table"]
-    C1 --> C2["Check Cochran's Condition: All Expected Frequencies ≥ 5?"]
-    C2 --> C3["Flag Weather 4: n = 1, E ≈ 0.25 (Violation)"]
-    C3 --> C4["Run Chi-Square Test: χ² = 283.4, p < 1e-50<br/>Re-verify with Merged Severe Category"]
+    ChiPath --> C1["Build 4x4 Contingency Matrix"]
+    C1 --> C2["Check Expected Frequencies (Flag Weather 4: n = 1)"]
+    C2 --> C3["Chi-Square Test: χ² = 283.40, df = 9, p < 1e-50<br/>Decision: Reject H0"]
 
     style Start fill:#0284C7,color:#fff,stroke:#0369A1
     style T3 fill:#10B981,color:#fff,stroke:#059669
     style A4 fill:#10B981,color:#fff,stroke:#059669
-    style C4 fill:#10B981,color:#fff,stroke:#059669
+    style C3 fill:#10B981,color:#fff,stroke:#059669
 ```
 
 ---
 
-## 📊 Exploratory Data Analysis & Distribution Profiling
+## 📊 Exploratory Data Analysis: Key Visual Highlights
 
-### Target Skewness & Log Transformation
-Total hourly rental count has a mean of **191.6** and a median of **145.0**, showing positive skewness ($\text{skew} = +1.24$). Most operating hours log fewer than 200 rentals, while peak commuter spikes reach up to **977 bikes/hour**.
+### 1. Univariate Distributions & Outliers (Continuous Variables)
+*(Generated directly from Cell 18 of the analysis notebook)*
 
 <div align="center">
-  <img src="assets/01_demand_distribution_and_skew.png" width="95%" alt="Yulu Demand Distribution and Log Transformation" />
+  <img src="assets/01_univariate_continuous_distributions.png" width="95%" alt="Univariate Continuous Variable Distributions and Boxplots" />
 </div>
 
-- **Left Panel:** Raw count distribution exhibits a long right-tail with outliers during peak transit hours.
-- **Right Panel:** Log transformation ($\log(1 + \text{count})$) stabilizes the variance and brings the distribution close to a symmetric bell curve ($\text{skew} = -0.09$), verifying suitability for linear regression baselines.
+- **Distribution Characteristics:**
+  - `count`, `casual`, and `registered` are heavily right-skewed with long tails.
+  - The mean rental count is **191.57**, while the median is **145.00**, indicating high peak volumes during commute rush hours.
+  - `windspeed` has 1,313 zero values, reflecting sensor measurement thresholds (anemometer cut-in speed) rather than completely still air.
+- **Outlier Detection:** Boxplots identify upper IQR outliers in rental counts during peak transit surges, representing legitimate commercial volume rather than corrupt entries.
+
+---
+
+### 2. Bivariate Analysis: Target vs. Primary Categorical Features
+*(Generated directly from Cell 22 of the analysis notebook using `palette = 'turbo'`)*
+
+<div align="center">
+  <img src="assets/02_bivariate_categorical_vs_count.png" width="95%" alt="Bivariate Analysis of Rental Count by Categories" />
+</div>
+
+- **Top Row (Distributions & Medians):**
+  - **Season:** Spring medians and IQR spans sit dramatically lower than Summer, Fall, and Winter.
+  - **Working Day:** Medians and spreads between working and non-working days align closely.
+  - **Weather:** Step-down pattern from Clear (1) to Mist (2) to Rain/Snow (3).
+- **Bottom Row (Average Demand):**
+  - **Season:** Fall leads demand at **234.42 rides/hr**, followed by Summer (**215.25**), Winter (**198.99**), and Spring (**116.34**).
+  - **Working Day:** **193.01 rides/hr** on working days vs. **188.51 rides/hr** on non-working days.
+  - **Weather:** **205.24 rides/hr** in Clear weather, dropping to **118.85 rides/hr** in Light Rain/Snow.
+
+---
+
+### 3. Correlation Matrix & Multicollinearity
+*(Generated directly from Cell 23 of the analysis notebook)*
+
+<div align="center">
+  <img src="assets/03_correlation_matrix.png" width="75%" alt="Numerical Correlation Heatmap" />
+</div>
+
+- **Key Correlation Insights:**
+  - `temp` and `atemp` exhibit a correlation of **$r = 0.98$**, confirming severe multicollinearity. One metric is redundant for downstream regression.
+  - Temperature shows a moderate positive correlation with rental demand (**$r = +0.39$**).
+  - Humidity exhibits a moderate negative correlation with rental demand (**$r = -0.32$**). High humidity combined with heat reduces pedal-assist cycle usage.
 
 ---
 
 ## 🔬 Statistical Hypothesis Testing Deep-Dive
 
-### 1. Working Day Impact (2-Sample T-Test)
+### Test 1: Working Day vs. Count (2-Sample T-Test)
 
 #### Formulation:
 - **Null Hypothesis ($H_0$):** Mean hourly rental count on working days equals non-working days ($\mu_{\text{working}} = \mu_{\text{non-working}}$).
 - **Alternative Hypothesis ($H_a$):** Mean hourly rental count on working days differs from non-working days ($\mu_{\text{working}} \neq \mu_{\text{non-working}}$).
 - **Significance Level:** $\alpha = 0.05$.
 
-<div align="center">
-  <img src="assets/02_workingday_commuter_vs_casual_dynamics.png" width="95%" alt="Working Day Commuter vs Casual Dynamics" />
-</div>
+#### Code Implementation & Diagnostics:
+```python
+# Extract sample groups
+working_days = yulu[yulu['workingday'] == 1]['count']
+non_working_days = yulu[yulu['workingday'] == 0]['count']
 
-#### Assumption Checks & Test Results:
-1. **Normality:** Sample sizes are large ($n_1 = 7,412$, $n_0 = 3,474$). Under CLT, sampling distributions of the mean are normally distributed.
-2. **Levene's Test for Equal Variance:** $W = 0.0049, p = 0.944$. Equal variance assumption holds.
-3. **Welch's Independent 2-Sample T-Test:**
-   $$t = \frac{\bar{X}_1 - \bar{X}_0}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_0^2}{n_0}}} = 1.210, \quad p = 0.226$$
-4. **Mann-Whitney U Test (Non-Parametric):** $U = 1.28 \times 10^7, p = 0.963$.
+# 1. Shapiro-Wilk Normality Check (Sample n=500)
+shapiro_w = stats.shapiro(working_days.sample(500, random_state=42))
+shapiro_nw = stats.shapiro(non_working_days.sample(500, random_state=42))
+# Samples deviate from normality (p < 0.05); Central Limit Theorem applies (N > 3,000 per group).
 
-#### Statistical Decision & Business Insight:
-> **Fail to Reject $H_0$ ($p = 0.226 > 0.05$).**  
-> Total hourly demand does not differ between working days ($193.0$) and non-working days ($188.5$).  
-> **Operational Reality:** While total daily volume is unchanged, user composition inverts. Registered commuter demand surges at **8:00 AM (340 bikes/hr)** and **5:00 PM (410 bikes/hr)** on weekdays. Casual rider demand jumps by **+136% on weekend afternoons (12:00 PM - 4:00 PM)**.
+# 2. Levene's Test for Homogeneity of Variance
+levene_stat, levene_p = stats.levene(working_days, non_working_days)
+# Levene's Test: Statistic = 0.0049, p-value = 0.9438 -> Equal variance assumption holds!
 
----
+# 3. Two-Sample Independent T-Test
+t_stat, t_p = stats.ttest_ind(working_days, non_working_days, equal_var=True)
+# t-statistic = 1.2098, p-value = 0.2264
+```
 
-### 2. Seasonal Demand Variation (One-Way ANOVA + Tukey HSD)
-
-#### Formulation:
-- **Null Hypothesis ($H_0$):** Mean rental demand is identical across all four seasons ($\mu_1 = \mu_2 = \mu_3 = \mu_4$).
-- **Alternative Hypothesis ($H_a$):** At least one season has a significantly different mean rental demand.
-- **Significance Level:** $\alpha = 0.05$.
-
-<div align="center">
-  <img src="assets/03_seasonal_demand_and_tukey_hsd.png" width="95%" alt="Seasonal Demand ANOVA and Tukey HSD" />
-</div>
-
-#### Group Metrics Across Seasons:
-| Season Code | Season Name | Sample Size ($n$) | Mean Hourly Rentals ($\mu$) | Standard Deviation ($\sigma$) |
-| :---: | :---: | :---: | :---: | :---: |
-| **1** | **Spring** | 2,686 | **116.34** | 125.27 |
-| **2** | **Summer** | 2,733 | **215.25** | 192.00 |
-| **3** | **Fall** | 2,733 | **234.42** | 197.15 |
-| **4** | **Winter** | 2,734 | **198.99** | 177.62 |
-
-#### Statistical Test & Post-Hoc Analysis:
-1. **Levene’s Test:** $W = 187.77, p < 10^{-100}$ (Variances are unequal across seasons).
-2. **One-Way ANOVA (F-Test):**
-   $$F = \frac{\text{MS}_{\text{between}}}{\text{MS}_{\text{within}}} = 236.94, \quad p = 6.16 \times 10^{-149}$$
-3. **Kruskal-Wallis Test (Non-Parametric):** $H = 699.66, p = 2.47 \times 10^{-151}$.
-4. **Post-Hoc Tukey HSD:**
-   - Spring vs Summer: $\Delta = +98.91$, 95% CI [$87.2, 110.6$], $p < 0.001$.
-   - Spring vs Fall: $\Delta = +118.07$, 95% CI [$106.4, 129.8$], $p < 0.001$.
-   - Spring vs Winter: $\Delta = +82.65$, 95% CI [$70.9, 94.4$], $p < 0.001$.
-   - Summer vs Fall: $\Delta = +19.16$, 95% CI [$7.5, 30.9$], $p = 0.001$.
-
-#### Statistical Decision & Business Insight:
-> **Reject $H_0$ ($p < 10^{-100}$).**  
-> Cycle demand varies significantly by season. Spring experiences an acute **50% demand collapse** ($116.3$ bikes/hr) compared to the Fall peak ($234.4$ bikes/hr). Yulu must run targeted spring promotions and adjust fleet deployment during low-demand months.
+#### Decision & Inference:
+> **Decision: Fail to Reject $H_0$ ($p = 0.2264 > 0.05$).**  
+> There is no statistically significant difference in mean rental counts between working days ($193.01$) and non-working days ($188.51$). Working day status alone does not alter total daily demand.
 
 ---
 
-### 3. Weather Sensitivity & The n=1 Edge Case (ANOVA)
+### Test 2: Season & Weather vs. Count (One-Way & Two-Way ANOVA)
 
-#### Formulation:
-- **Null Hypothesis ($H_0$):** Mean rental demand is identical across all weather conditions ($\mu_1 = \mu_2 = \mu_3 = \mu_4$).
-- **Alternative Hypothesis ($H_a$):** At least one weather condition has a significantly different mean demand.
+#### 1. One-Way ANOVA for Seasons:
+- **$H_0$:** $\mu_{\text{spring}} = \mu_{\text{summer}} = \mu_{\text{fall}} = \mu_{\text{winter}}$
+- **$H_a$:** At least one season has a significantly different mean demand.
+- **Results:**
+  - Levene’s Test: $W = 187.77, p < 10^{-100}$ (Unequal variance).
+  - One-Way ANOVA: $F = 236.9467, p = 6.16 \times 10^{-149}$ -> **Reject $H_0$**.
+  - Kruskal-Wallis Non-Parametric Check: $H = 699.66, p < 10^{-100}$ -> **Robustly confirmed**.
 
-<div align="center">
-  <img src="assets/04_weather_impact_and_severe_drop.png" width="95%" alt="Weather Impact and Severe Drop" />
-</div>
+#### 2. One-Way ANOVA for Weather:
+- **$H_0$:** Mean demand is identical across all weather conditions.
+- **Results:**
+  - One-Way ANOVA: $F = 65.5278, p = 5.48 \times 10^{-42}$ -> **Reject $H_0$**.
+  - Kruskal-Wallis Check: $p < 0.001$ -> **Robustly confirmed**.
 
-#### Group Metrics Across Weather Categories:
-| Weather Category | Condition Description | Records ($n$) | Share (%) | Mean Rentals ($\mu$) |
-| :---: | :--- | :---: | :---: | :---: |
-| **1** | Clear, Few clouds, Partly cloudy | 7,192 | 66.07% | **205.24** |
-| **2** | Mist + Cloudy, Broken clouds | 2,834 | 26.03% | **178.96** |
-| **3** | Light Snow, Light Rain, Thunderstorm | 859 | 7.89% | **118.85** |
-| **4** | Heavy Rain + Ice Pellets + Thunderstorm | **1** | **0.01%** | **164.00** *(n=1 Outlier)* |
+#### 3. Two-Way ANOVA Implementation (`pingouin`):
+```python
+# Drop the single outlier row with weather category 4 (n=1)
+yulu_anova = yulu[yulu['weather'] != 4]
 
-#### Test Statistics & The n=1 Sensitivity Diagnostic:
-1. **One-Way ANOVA (All 4 Groups):** $F = 65.53, p = 5.48 \times 10^{-42}$.
-2. **Kruskal-Wallis Test:** $H = 205.60, p = 2.45 \times 10^{-44}$.
-3. **Sensitivity Re-Test (Excluding Weather 4):** $F = 68.32, p = 4.22 \times 10^{-44}$.
-4. **Sensitivity Re-Test (Merging Weather 3 & 4 into Severe Weather):** $F = 68.41, p = 3.89 \times 10^{-44}$.
+# Run Two-Way ANOVA with Type-2 Sum of Squares
+model = pg.anova(dv='count', between=['weather', 'season'], data=yulu_anova, ss_type=2, detailed=True)
+```
 
-#### Statistical Decision & Business Insight:
-> **Reject $H_0$ ($p < 10^{-42}$).**  
-> Weather conditions directly govern rental volumes. Adverse rain and snow trigger a **42% demand decline** compared to clear weather. The single observation in Weather 4 was isolated and verified; the conclusion remains robust across all sensitivity checks.
+#### Two-Way ANOVA Results Table:
+| Source Factor | Sum of Squares ($SS$) | Degrees of Freedom ($DF$) | Mean Square ($MS$) | $F$-Statistic | $p$-value | Partial Eta-Squared ($\eta_p^2$) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Season** | $2.22 \times 10^7$ | 3 | $7.41 \times 10^6$ | $239.52$ | **$< 10^{-100}$** | **$0.0620$ (6.2%)** |
+| **Weather** | $6.27 \times 10^6$ | 2 | $3.13 \times 10^6$ | $101.27$ | **$< 10^{-35}$** | **$0.0183$ (1.8%)** |
+| **Weather $\times$ Season** | $7.76 \times 10^5$ | 6 | $1.29 \times 10^5$ | $4.18$ | **$4.14 \times 10^{-8}$** | **$0.0023$ (0.2%)** |
+| **Residual** | $3.36 \times 10^8$ | 10,873 | $3.09 \times 10^4$ | — | — | — |
+
+#### Combined Inference:
+> 1. **Season is the primary driver:** Explains **6.2%** of total demand variance. Spring experiences an acute slump ($116.3$ rides/hr vs $234.4$ in Fall).  
+> 2. **Weather is a secondary driver:** Explains **1.8%** of demand variance, with rain cutting demand by ~42%.  
+> 3. **Negligible Interaction ($\eta_p^2 = 0.2\%$):** Bad weather reduces demand by roughly the same ~40% margin regardless of whether it rains in Summer, Fall, or Winter.
 
 ---
 
-### 4. Weather vs. Season Dependency (Chi-Square Test)
+### Test 3: Weather vs. Season (Chi-Square Test of Independence)
 
 #### Formulation:
 - **Null Hypothesis ($H_0$):** Weather condition is independent of season.
-- **Alternative Hypothesis ($H_a$):** Weather condition is significantly dependent on season.
+- **Alternative Hypothesis ($H_a$):** Weather condition depends significantly on season.
 
-<div align="center">
-  <img src="assets/05_weather_season_contingency_heatmap.png" width="95%" alt="Weather vs Season Contingency Matrix" />
-</div>
+#### Code Implementation:
+```python
+# Contingency table
+crosstab_all = pd.crosstab(yulu['season'], yulu['weather'])
 
-#### Contingency Cross-Tabulation (Observed Frequencies):
-| Season | Clear (1) | Mist (2) | Light Rain/Snow (3) | Heavy Rain (4) | Total Rows |
+# Chi-Square Test
+chi2_stat, p_val, dof, expected = stats.chi2_contingency(crosstab_all)
+# Chi-Square Statistic: 283.40, p-value: 1.55e-55, df: 9
+```
+
+#### Observed Contingency Frequencies:
+| Season | Clear (1) | Mist / Cloudy (2) | Light Rain / Snow (3) | Heavy Rain / Ice (4) | Total Rows |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Spring** | 1,759 | 715 | 211 | **1** | 2,686 |
 | **Summer** | 1,801 | 708 | 224 | **0** | 2,733 |
@@ -272,17 +290,9 @@ Total hourly rental count has a mean of **191.6** and a median of **145.0**, sho
 | **Winter** | 1,702 | 807 | 225 | **0** | 2,734 |
 | **Total** | **7,192** | **2,834** | **859** | **1** | **10,886** |
 
-#### Test Computation & Cochran's Rule Check:
-1. **Cochran's Condition Diagnostic:** Chi-Square assumes expected frequency in each cell $E_{ij} \ge 5$.
-   For Weather 4: $E = \frac{2686 \times 1}{10886} \approx 0.247 < 5$.
-   This violates Cochran's rule for that specific column.
-2. **Chi-Square Calculation:**
-   $$\chi^2 = \sum \frac{(O_{ij} - E_{ij})^2}{E_{ij}} = 283.40, \quad df = (4-1)(4-1) = 9, \quad p = 1.55 \times 10^{-55}$$
-3. **Sensitivity Check (Combining Weather 3 & 4):** $\chi^2 = 282.85, df = 6, p = 3.91 \times 10^{-58}$.
-
-#### Statistical Decision & Business Insight:
-> **Reject $H_0$ ($p < 10^{-50}$).**  
-> Weather conditions depend heavily on the seasonal cycle. Winter records the highest frequency of misty and cloudy days (807 hours), while Fall generates the highest volume of clear riding days (1,930 hours).
+#### Decision & Inference:
+> **Decision: Reject $H_0$ ($p < 10^{-50}$).**  
+> Weather conditions depend heavily on the season. Winter concentrates the highest misty/cloudy days (29.5%), while Summer and Fall see more clear riding days.
 
 ---
 
@@ -291,34 +301,30 @@ Total hourly rental count has a mean of **191.6** and a median of **145.0**, sho
 ```mermaid
 flowchart LR
     subgraph S1["1. Commuter Lock-In"]
-        A1["Weekday Commuters<br/>(8 AM & 5 PM Peaks)"] --> B1["Corporate Pass Bundles &<br/>Metro Station Hub Staging"]
+        A1["Weekday Commuters<br/>(81.2% of Total Rides)"] --> B1["Corporate Pass Bundles &<br/>Metro Station Staging"]
     end
-    subgraph S2["2. Weekend Surge"]
-        A2["Casual Riders<br/>(+136% Weekend Jump)"] --> B2["Leisure & Park Hubs<br/>Dynamic Hourly Passes"]
+    subgraph S2["2. Weekend Capture"]
+        A2["Casual Riders<br/>(Doubles on Weekends)"] --> B2["Park & Leisure Hubs<br/>2-Hour Explorer Passes"]
     end
-    subgraph S3["3. Seasonal Slump"]
-        A3["Spring Demand Slump<br/>(50% Drop vs Fall)"] --> B3["College Student Passes &<br/>Fleet Battery Overhauls"]
+    subgraph S3["3. Spring Slump"]
+        A3["Spring Demand Slump<br/>(116.3 vs 234.4 Fall)"] --> B3["Warehouse Servicing &<br/>Student Discounts"]
     end
-    subgraph S4["4. Rain Maintenance"]
-        A4["Adverse Weather<br/>(42% Rental Drop)"] --> B4["Scheduled Preventative Fleet Servicing"]
+    subgraph S4["4. Rain Response"]
+        A4["Adverse Weather<br/>(42% Utilization Drop)"] --> B4["Shelter Battery Stations &<br/>Halt Over-Dispatching"]
     end
 ```
 
-### 1. Dynamic Fleet Rebalancing
-- **Weekdays (07:00–10:00 & 16:30–19:30):** Position 70% of available electric cycles at high-density metro stations, major corporate tech corridors, and bus terminals. Commuters need instant bike access without waiting.
-- **Weekends (11:00–17:00):** Reposition bikes away from corporate parks toward urban parks, shopping zones, waterfronts, and university clusters to capture high-margin casual riders.
+### 1. Fleet Rebalancing & Dispatch
+- **Weekdays (07:30–10:00 & 16:30–19:00):** Concentrate 70–80% of active cycles at high-density metro stations, bus interchanges, and corporate tech parks. Deploy rebalancing vans between 10:00–15:00 to retrieve vehicles clustered in office zones and redistribute them for the evening commute.
+- **Weekends (11:00–17:00):** Reposition vehicles away from corporate parks toward urban parks, lakefront paths, university campuses, and residential clusters where casual users ride.
 
-### 2. Spring Demand Revival Campaign
-- Spring experiences an acute slump ($116.3$ bikes/hr).
-- Yulu should launch "Spring Semester" student passes and bundle corporate loyalty points to stimulate usage during historically slow months.
+### 2. Pricing & Subscription Strategy
+- **Lock in Commuter Baseline Revenue:** Registered commuters generate 81.2% of all rides. Introduce monthly and quarterly unlimited-commute passes to lock in recurring cash flows and stabilize revenue against seasonal variations.
+- **Weekend Casual Bundles:** Introduce 2-hour or day-explorer passes on weekends to maximize leisure ride conversion.
 
-### 3. Adverse Weather Fleet Servicing Protocol
-- Rainy and snowy weather drops hourly utilization by 42%.
-- Rather than leaving idle bikes exposed to water damage, use rainy days as **scheduled maintenance windows** for battery diagnostics, tire replacement, and motor overhauls.
-
-### 4. Commuter Retention via Corporate Subscription Passes
-- Registered riders drive weekday revenue stability.
-- Form direct B2B corporate partnerships to offer subsidized micro-mobility commuter packages, securing predictable annual cash flows.
+### 3. Season & Weather Operational Planning
+- **Spring Fleet Utilization Plan:** With Spring demand falling to ~116 rides/hour, pull 25–30% of the active fleet into warehouses for preventative maintenance, battery health diagnostics, and firmware upgrades. Launch student discount passes to stimulate baseline off-peak utilization.
+- **Rainy Day Protocol:** When rain is predicted, shelter battery swapping stations, reduce outdoor staging, and avoid over-dispatching rebalancing teams during active showers.
 
 ---
 
@@ -328,29 +334,28 @@ flowchart LR
 Yulu_Hypothesis-Business-Case-Study-Github/
 ├── .gitignore                                              # Python & Jupyter exclusion rules
 ├── README.md                                               # Master case study documentation
-├── generate_readme_assets.py                               # Script to generate visual charts
-├── assets/                                                 # High-resolution charts & icons
+├── assets/                                                 # Authentic charts & official SVG icons
 │   ├── yulu_logo.png                                       # Official Yulu brand logo
-│   ├── 01_demand_distribution_and_skew.png                 # Skewness & log transform comparison
-│   ├── 02_workingday_commuter_vs_casual_dynamics.png       # The working day rider paradox
-│   ├── 03_seasonal_demand_and_tukey_hsd.png                # Seasonal ANOVA & post-hoc Tukey HSD
-│   ├── 04_weather_impact_and_severe_drop.png               # Weather sensitivity & n=1 callout
-│   ├── 05_weather_season_contingency_heatmap.png           # Contingency matrix & Chi-Square test
-│   └── icons/                                              # Tech stack SVG icon library
-│       ├── python-icon.svg
-│       ├── pandas-icon.svg
-│       ├── numpy-icon.svg
-│       ├── scipy-icon.svg
-│       ├── statsmodels-icon.svg
-│       ├── matplotlib-icon.svg
-│       ├── seaborn-icon.svg
-│       ├── jupyter-icon.svg
-│       └── github-icon.svg
+│   ├── 01_univariate_continuous_distributions.png          # Exact Cell 18: Histograms & boxplots
+│   ├── 02_bivariate_categorical_vs_count.png               # Exact Cell 22: Boxplots & barplots (turbo palette)
+│   ├── 03_correlation_matrix.png                           # Exact Cell 23: Numerical correlation heatmap
+│   └── icons/                                              # Official tech stack SVG icon library
+│       ├── python-icon.svg                                 # (techstack-generator.vercel.app)
+│       ├── github-icon.svg                                 # (techstack-generator.vercel.app)
+│       ├── pandas-icon.svg                                 # Official Devicon SVG
+│       ├── numpy-icon.svg                                  # Official Devicon SVG
+│       ├── scipy-icon.svg                                  # Official SimpleIcons SVG
+│       ├── statsmodels-icon.svg                            # Official Statsmodels repo SVG
+│       ├── matplotlib-icon.svg                             # Official Devicon SVG
+│       ├── seaborn-icon.svg                                # Official Seaborn repo SVG
+│       └── jupyter-icon.svg                                # Official Devicon SVG
 ├── data/
 │   ├── bike_sharing.csv                                    # Raw dataset (10,886 hourly rows)
 │   └── README.md                                           # Data dictionary & column profiling
+├── docs/
+│   └── Problem_Statement.md                                # Official problem statement
 ├── notebooks/
-│   └── Yulu_Hypothesis_Testing_Case_Study.ipynb            # Clean, documented Jupyter notebook
+│   └── Yulu_Hypothesis_Testing_Case_Study.ipynb            # Documented Jupyter notebook
 └── reports/
     └── Shivaling_Scaler_Yulu_Hypothesis_Case_Study_Report.pdf  # Submitted PDF case study report
 ```
@@ -365,7 +370,7 @@ git clone https://github.com/Hazardous9hub/Yulu-Hypothesis-Testing-Business-Case
 cd Yulu-Hypothesis-Testing-Business-Case-Study
 ```
 
-### 2. Set Up Environment
+### 2. Set Up Virtual Environment & Dependencies
 ```bash
 # Create and activate virtual environment
 python -m venv venv
@@ -374,16 +379,12 @@ venv\Scripts\activate
 # On Linux/macOS:
 source venv/bin/activate
 
-# Install required dependencies
-pip install pandas numpy scipy statsmodels matplotlib seaborn
+# Install exact dependencies
+pip install pandas numpy scipy statsmodels pingouin matplotlib seaborn jupyter
 ```
 
-### 3. Regenerate Figures or Run the Notebook
+### 3. Launch Notebook
 ```bash
-# Run asset generator
-python generate_readme_assets.py
-
-# Launch Jupyter Notebook
 jupyter notebook notebooks/Yulu_Hypothesis_Testing_Case_Study.ipynb
 ```
 
