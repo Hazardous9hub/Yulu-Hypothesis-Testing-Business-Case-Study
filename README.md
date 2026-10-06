@@ -14,6 +14,12 @@
 ![Scaler DSML](https://img.shields.io/badge/Scaler_DSML-Business_Case_Study-FF4B4B?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Completed-success?style=for-the-badge)
 
+<br/><br/>
+
+<img src="assets/yulu-case-study-banner.jpg" width="100%" alt="Yulu Micro-Mobility Demand Analytics Case Study Banner" />
+
+<br/>
+
 **Diagnosing Micro-Mobility Demand Across 10,886 Hourly Records Using Two-Sample T-Tests, Two-Way ANOVA, and Chi-Square Testing**  
 *(Business Case Study completed as part of Scaler Academy's Data Science & Machine Learning Program)*
 
