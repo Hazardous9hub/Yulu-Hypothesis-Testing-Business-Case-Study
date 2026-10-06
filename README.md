@@ -1,4 +1,4 @@
-# 🚲 Yulu Micro-Mobility: Statistical Hypothesis Testing & Demand Analytics
+# 🚲 Yulu: Statistical Hypothesis Testing & Demand Analytics
 
 <div align="center">
 
