@@ -10,7 +10,7 @@
 ![Pandas](https://img.shields.io/badge/Pandas-Data_Analysis-150458?style=for-the-badge&logo=pandas&logoColor=white)
 ![NumPy](https://img.shields.io/badge/NumPy-Scientific_Computing-013243?style=for-the-badge&logo=numpy&logoColor=white)
 ![SciPy](https://img.shields.io/badge/SciPy-Applied_Statistics-8CAAE6?style=for-the-badge&logo=scipy&logoColor=white)
-![Statsmodels](https://img.shields.io/badge/Statsmodels-Econometrics-005571?style=for-the-badge&logo=statsmodels&logoColor=white)
+![Pingouin](https://img.shields.io/badge/Pingouin-Two--Way_ANOVA-3F88C5?style=for-the-badge)
 ![Scaler DSML](https://img.shields.io/badge/Scaler_DSML-Business_Case_Study-FF4B4B?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Completed-success?style=for-the-badge)
 
@@ -34,7 +34,7 @@
     <td align="center" width="95"><img src="assets/icons/pandas-icon.svg" width="36" height="36"/><br/><sub><b>Pandas</b></sub></td>
     <td align="center" width="95"><img src="assets/icons/numpy-icon.svg" width="36" height="36"/><br/><sub><b>NumPy</b></sub></td>
     <td align="center" width="95"><img src="assets/icons/scipy-icon.svg" width="36" height="36"/><br/><sub><b>SciPy Stats</b></sub></td>
-    <td align="center" width="95"><img src="assets/icons/statsmodels-icon.svg" width="36" height="36"/><br/><sub><b>Statsmodels</b></sub></td>
+    <td align="center" width="95"><img src="assets/icons/pingouin-icon.svg" width="36" height="36"/><br/><sub><b>Pingouin</b></sub></td>
     <td align="center" width="95"><img src="assets/icons/matplotlib-icon.svg" width="36" height="36"/><br/><sub><b>Matplotlib</b></sub></td>
     <td align="center" width="95"><img src="assets/icons/seaborn-icon.svg" width="36" height="36"/><br/><sub><b>Seaborn</b></sub></td>
     <td align="center" width="95"><img src="assets/icons/jupyter-icon.svg" width="36" height="36"/><br/><sub><b>Jupyter</b></sub></td>
@@ -50,11 +50,11 @@
 
 | Research Question | Statistical Test Applied | Test Metric & $p$-value | Decision ($\alpha=0.05$) | Core Business Finding |
 | :--- | :--- | :--- | :--- | :--- |
-| **Working Day Impact** | **2-Sample Independent T-Test** (Levene check) | $t = 1.2098$<br>$p = 0.2264$ | **Fail to Reject $H_0$** | **Total daily volume is invariant, but user composition flips.** Mean rentals are nearly identical ($193.0$ working vs $188.5$ non-working). Registered commuters drive 81% of rides peaking at 8 AM/5 PM, while casual riders jump on weekend afternoons ($59.3$/hr). |
+| **Working Day Impact** | **2-Sample Independent T-Test** (Levene check) | $t = 1.2096$<br>$p = 0.2264$ | **Fail to Reject $H_0$** | **Total daily volume is invariant, but user composition flips.** Mean rentals are nearly identical ($193.0$ working vs $188.5$ non-working). Registered commuters drive 81% of rides peaking at 8 AM/5 PM, while casual riders jump on weekend afternoons ($59.3$/hr). |
 | **Seasonal Demand** | **One-Way ANOVA** & Kruskal-Wallis | $F = 236.95$<br>$p < 10^{-100}$ | **Reject $H_0$** | **Revenue dip is a Spring collapse, not a weekday slump.** Spring demand drops by **>50%** ($116.3$ rides/hr) compared to the Fall peak ($234.4$). Summer ($215.3$) and Winter ($199.0$) sit in between. |
-| **Weather Impact** | **One-Way ANOVA** & Kruskal-Wallis | $F = 65.53$<br>$p < 10^{-41}$ | **Reject $H_0$** | **Rain slashes demand by ~42%.** Clear weather averages $205.2$ rides/hr; light rain drops to $118.8$. Diagnosed single outlier record in Weather 4 ($n=1$) where sample variance cannot be estimated. |
+| **Weather Impact** | **One-Way ANOVA** (Homoscedasticity rejected) | $F = 65.53$<br>$p < 10^{-41}$ | **Reject $H_0$** | **Rain slashes demand by ~42%.** Clear weather averages $205.2$ rides/hr; light rain drops to $118.8$. Diagnosed single outlier record in Weather 4 ($n=1$) where sample variance cannot be estimated. |
 | **Season & Weather Interaction** | **Two-Way ANOVA** (`pingouin`, SS Type-2) | Season $\eta_p^2 = 6.2\%$<br>Weather $\eta_p^2 = 1.8\%$<br>Interaction $\eta_p^2 = 0.2\%$ | **Both Significant; Negligible Interaction** | **Season sets baseline demand; weather causes daily fluctuations.** Interaction explains only $0.2\%$ of variance. Rain cuts demand by ~40% regardless of whether it occurs in Summer, Fall, or Winter. |
-| **Weather vs. Season Dependency** | **Chi-Square Test ($\chi^2$)** of Independence | $\chi^2 = 283.40, df=9$<br>$p = 1.55 \times 10^{-55}$ | **Reject $H_0$** | **Weather patterns depend heavily on seasons.** Winter concentrates misty/cloudy days (29.5%), while Summer and Fall provide maximum clear riding hours. |
+| **Weather vs. Season Dependency** | **Chi-Square Test ($\chi^2$)** of Independence | $\chi^2 = 49.16, df=9$<br>$p = 1.55 \times 10^{-7}$ | **Reject $H_0$** | **Weather patterns depend heavily on seasons.** Winter concentrates misty/cloudy days (29.5%), while Summer and Fall provide maximum clear riding hours. |
 
 ---
 
@@ -113,7 +113,7 @@ Following a **conspicuous revenue and fleet utilization slump**, leadership requ
 
 ### 1. Working Day vs. Count (2-Sample T-Test)
 - **Null Hypothesis ($H_0$):** $\mu_{\text{working}} = \mu_{\text{non-working}}$ | **Alternative ($H_a$):** $\mu_{\text{working}} \neq \mu_{\text{non-working}}$
-- **Test Metric:** $t = 1.2098, p = 0.2264$ | **Decision:** Fail to Reject $H_0$ ($\alpha = 0.05$).
+- **Test Metric:** $t = 1.2096, p = 0.2264$ | **Decision:** Fail to Reject $H_0$ ($\alpha = 0.05$).
 - **Takeaway:** Total daily volume is invariant. However, registered commuters drive 81.2% of weekday volume (peaking at 8 AM and 5 PM), whereas casual users more than double on weekend afternoons ($59.3$/hr vs $25.1$/hr).
 
 <details>
@@ -126,11 +126,11 @@ Following a **conspicuous revenue and fleet utilization slump**, leadership requ
 
 # 2. Levene's Test for Homogeneity of Variance
 levene_stat, levene_p = stats.levene(working_days, non_working_days)
-# Statistic = 0.0049, p-value = 0.9438 -> Equal variance assumption holds.
+# Statistic = 0.0050, p-value = 0.9438 -> Equal variance assumption holds.
 
 # 3. Two-Sample Independent T-Test
 t_stat, t_p = stats.ttest_ind(working_days, non_working_days, equal_var=True)
-# t-statistic = 1.2098, p-value = 0.2264 -> Fail to Reject H0.
+# t-statistic = 1.2096, p-value = 0.2264 -> Fail to Reject H0.
 ```
 </details>
 
@@ -138,16 +138,17 @@ t_stat, t_p = stats.ttest_ind(working_days, non_working_days, equal_var=True)
 
 ### 2. Season & Weather vs. Count (One-Way & Two-Way ANOVA)
 - **One-Way ANOVA (Season):** $F = 236.95, p < 10^{-100}$ (Kruskal-Wallis $H = 699.66, p < 10^{-100}$) $\rightarrow$ **Reject $H_0$**.
-- **One-Way ANOVA (Weather):** $F = 65.53, p < 10^{-41}$ (Kruskal-Wallis $p < 10^{-43}$) $\rightarrow$ **Reject $H_0$**.
+- **One-Way ANOVA (Weather):** $F = 65.53, p < 10^{-41}$ (exact $p = 5.48 \times 10^{-42}$) $\rightarrow$ **Reject $H_0$**.
 - **Two-Way ANOVA (`pingouin.anova`):** Evaluated main effects and interaction after isolating the single $n=1$ record in Weather 4.
 
-| Factor | Sum of Squares | $DF$ | $F$-Statistic | $p$-value | Partial Eta-Squared ($\eta_p^2$) |
+| Factor | Sum of Squares ($SS$) | $DF$ | $F$-Statistic | $p$-value | Partial Eta-Squared ($\eta_p^2$) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Season** | $2.22 \times 10^7$ | 3 | $239.52$ | **$< 10^{-100}$** | **$6.2\%$ (Primary Driver)** |
-| **Weather** | $6.27 \times 10^6$ | 2 | $101.27$ | **$< 10^{-35}$** | **$1.8\%$ (Secondary Driver)** |
-| **Weather $\times$ Season** | $7.76 \times 10^5$ | 6 | $4.18$ | **$4.14 \times 10^{-8}$** | **$0.2\%$ (Negligible Interaction)** |
+| **Season** | $2.16 \times 10^7$ | 3 | $238.03$ | **$< 0.001$** | **$6.2\%$ (Primary Driver)** |
+| **Weather** | $6.02 \times 10^6$ | 2 | $99.60$ | **$< 0.001$** | **$1.8\%$ (Secondary Driver)** |
+| **Weather $\times$ Season** | $5.59 \times 10^5$ | 6 | $3.08$ | **$0.005$** | **$0.2\%$ (Negligible Interaction)** |
+| **Residual** | $3.29 \times 10^8$ | 10,873 | — | — | — |
 
-> **Key Finding:** Season governs macro quarterly volume (Spring slump of ~116 rides/hr). Weather causes daily fluctuations (~40% rain drop). Because the interaction explains only $0.2\%$ of variance, bad weather reduces demand by roughly the same margin across all seasons.
+> **Key Finding:** Season governs macro quarterly volume (Spring slump of ~116 rides/hr). Weather causes daily fluctuations (~40% rain drop). Because the interaction explains only $0.2\%$ of variance ($F = 3.08, p = 0.005$), bad weather reduces demand by roughly the same margin across all seasons.
 
 <details>
 <summary><b>🔍 View Two-Way ANOVA Implementation Code (Click to expand)</b></summary>
@@ -167,7 +168,7 @@ print(round(model, 6))
 
 ### 3. Weather vs. Season (Chi-Square Test of Independence)
 - **Null Hypothesis ($H_0$):** Weather condition is independent of season.
-- **Test Metric:** $\chi^2 = 283.40, df = 9, p = 1.55 \times 10^{-55}$ | **Decision:** Reject $H_0$ ($\alpha = 0.05$).
+- **Test Metric:** $\chi^2 = 49.16, df = 9, p = 1.55 \times 10^{-7}$ | **Decision:** Reject $H_0$ ($\alpha = 0.05$).
 - **Takeaway:** Weather conditions depend significantly on season. Winter has the highest misty/cloudy frequency (29.5%), while Summer and Fall have the highest clear-riding hours.
 
 <details>
@@ -180,7 +181,7 @@ crosstab_all = pd.crosstab(yulu['season'], yulu['weather'])
 
 # Chi-Square Test
 chi2_stat, p_val, dof, expected = stats.chi2_contingency(crosstab_all)
-# chi2 = 283.40, p = 1.55e-55, df = 9 -> Reject H0.
+# chi2 = 49.16, p = 1.55e-07, df = 9 -> Reject H0.
 ```
 </details>
 
@@ -209,8 +210,10 @@ chi2_stat, p_val, dof, expected = stats.chi2_contingency(crosstab_all)
 Yulu_Hypothesis-Business-Case-Study-Github/
 ├── .gitignore                                              # Git exclusion rules
 ├── README.md                                               # Master case study documentation
+├── requirements.txt                                        # Runtime dependencies
 ├── assets/                                                 # Authentic charts & official SVG icons
 │   ├── yulu_logo.png                                       # Brand logo
+│   ├── yulu-case-study-banner.jpg                          # Analytical case study hero banner
 │   ├── 01_univariate_continuous_distributions.png          # Exact Cell 18: Continuous distributions
 │   ├── 02_bivariate_categorical_vs_count.png               # Exact Cell 22: Bivariate box & bar plots
 │   ├── 03_correlation_matrix.png                           # Exact Cell 23: Numerical correlation heatmap
@@ -236,7 +239,7 @@ git clone https://github.com/Hazardous9hub/Yulu-Hypothesis-Testing-Business-Case
 cd Yulu-Hypothesis-Testing-Business-Case-Study
 
 # 2. Install dependencies
-pip install pandas numpy scipy statsmodels pingouin matplotlib seaborn jupyter
+pip install -r requirements.txt
 
 # 3. Launch notebook
 jupyter notebook notebooks/Yulu_Hypothesis_Testing_Case_Study.ipynb
